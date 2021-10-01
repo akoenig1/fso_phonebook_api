@@ -24,6 +24,14 @@ let persons = [
   }
 ]
 
+const generateId = () => {
+  const max = 100000
+  const id = Math.floor(Math.random() * max)
+  return id
+}
+
+app.use(express.json())
+
 app.get('/info', (req, res) => {
   const date = new Date();
   const info = `
@@ -35,6 +43,34 @@ app.get('/info', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  if((!body.name) || (!body.number)) {
+    return res.status(400).json({
+      error: 'Name and number required'
+    })
+  }
+
+  console.log(persons.filter(p => p.name === body.name));
+
+  if(persons.filter(p => p.name === body.name).length > 0) {
+    return res.status(400).json({
+      error: 'Name already exists in phonebook'
+    })
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(person);
+
+  res.json(person)
 })
 
 app.get('/api/persons/:id', (req, res) => {
