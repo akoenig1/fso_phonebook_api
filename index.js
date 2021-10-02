@@ -26,13 +26,18 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(express.static('build'))
 
 // Routes
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   const date = new Date();
-  const info = `
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${date}</p>
-  `
-  res.send(info)
+  Person.find({})
+    .then(persons => {
+      const length = persons.length
+      const info = `
+        <p>Phonebook has info for ${length} people</p>
+        <p>${date}</p>
+      `
+      res.send(info)
+    })
+    .catch(err => next(err))
 })
 
 app.get('/api/persons', (req, res) => {
