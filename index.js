@@ -40,14 +40,16 @@ app.get('/info', (req, res, next) => {
     .catch(err => next(err))
 })
 
-app.get('/api/persons', (req, res) => {
-  Person.find({}).then(persons => {
-    console.log(persons);
-    res.json(persons)
-  })
+app.get('/api/persons', (req, res, next) => {
+  Person.find({})
+    .then(persons => {
+      console.log(persons);
+      res.json(persons)
+    })
+    .catch(err => next(err))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
   if((!body.name) || (!body.number)) {
@@ -74,6 +76,21 @@ app.get('/api/persons/:id', (req, res, next) => {
       } else {
         res.status(404).end()
       }
+    })
+    .catch(err => next(err))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson)
     })
     .catch(err => next(err))
 })
