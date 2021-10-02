@@ -1,8 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const Person = require('./models/person')
 const app = express()
 
+// Local Data
 let persons = [
   { 
     "id": 1,
@@ -32,6 +35,7 @@ const generateId = () => {
   return id
 }
 
+// Middlewares
 morgan.token('body', (req, res) => {
   return JSON.stringify(req.body)
 })
@@ -41,6 +45,8 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('build'))
 
+
+// Routes
 app.get('/info', (req, res) => {
   const date = new Date();
   const info = `
@@ -51,7 +57,10 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person.find({}).then(persons => {
+    console.log(persons);
+    res.json(persons)
+  })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -99,7 +108,9 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
-const PORT = process.env.PORT || 3001;
+
+// Start App
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}...`)
 })
