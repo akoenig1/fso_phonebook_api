@@ -31,8 +31,12 @@ const generateId = () => {
   return id
 }
 
+morgan.token('body', (req, res) => {
+  return JSON.stringify(req.body)
+})
+
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/info', (req, res) => {
   const date = new Date();
