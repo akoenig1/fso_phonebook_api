@@ -1,17 +1,19 @@
+/* eslint-disable no-unused-vars */
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 require('dotenv').config()
 
+// eslint-disable-next-line no-undef
 const url = process.env.MONGODB_URI
 
-console.log('Connecting to', url);
+console.log('Connecting to', url)
 
 mongoose.connect(url)
   .then(res => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB')
   })
   .catch(err => {
-    console.log('Error connetiong to MongoDB: ', err.message);
+    console.log('Error connetiong to MongoDB: ', err.message)
   })
 
 const personSchema = new mongoose.Schema({

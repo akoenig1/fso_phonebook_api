@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-vars */
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
 const Person = require('./models/person')
 const app = express()
 
@@ -11,7 +11,7 @@ morgan.token('body', (req, res) => {
 })
 
 const errorHandler = (err, req, res, next) => {
-  console.log(err.message);
+  console.log(err.message)
 
   if(err.name === 'CastError') {
     return res.status(400).send({ err: 'Malformatted id' })
@@ -29,7 +29,7 @@ app.use(express.static('build'))
 
 // Routes
 app.get('/info', (req, res, next) => {
-  const date = new Date();
+  const date = new Date()
   Person.find({})
     .then(persons => {
       const length = persons.length
@@ -51,7 +51,7 @@ app.get('/api/persons', (req, res, next) => {
 })
 
 app.post('/api/persons', (req, res, next) => {
-  const body = req.body;
+  const body = req.body
 
   if((!body.name) || (!body.number)) {
     return res.status(400).json({
@@ -112,6 +112,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.use(errorHandler)
 
 // Start App
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}...`)
