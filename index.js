@@ -45,7 +45,6 @@ app.get('/info', (req, res, next) => {
 app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then(persons => {
-      console.log(persons);
       res.json(persons)
     })
     .catch(err => next(err))
@@ -93,7 +92,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  const opts = { new: true, runValidators: true }
+
+  Person.findByIdAndUpdate(req.params.id, person, opts)
     .then(updatedPerson => {
       res.json(updatedPerson)
     })
