@@ -15,6 +15,8 @@ const errorHandler = (err, req, res, next) => {
 
   if(err.name === 'CastError') {
     return res.status(400).send({ err: 'Malformatted id' })
+  } else if(err.name === 'ValidationError') {
+    return res.status(400).json({ err: err.message })
   }
 
   next(err)
@@ -63,9 +65,12 @@ app.post('/api/persons', (req, res, next) => {
     number: body.number
   })
 
-  person.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
+  person.save()
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      res.json(savedAndFormattedPerson)
+    })
+    .catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
